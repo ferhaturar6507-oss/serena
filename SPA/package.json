@@ -1,0 +1,10 @@
+{
+  "name": "serena-med-spa",
+  "version": "1.0.0",
+  "description": "Serena Medical Spa Static Website",
+  "scripts": {
+    "start": "npx serve -l 8000 .",
+    "dev": "npx serve -l 8000 .",
+    "serve:py": "python -m http.server 8000"
+  }
+}

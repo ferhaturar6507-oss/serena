@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html class="h-full scroll-smooth" lang="tr">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0" name="viewport"/>
+  <title>Serena Medical Spa</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  
+  <style>
+    @layer base {
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        max-width: 100vw;
+        overflow-x: clip;
+      }
+      body {
+        overscroll-behavior: none;
+      }
+      main > :first-child {
+        margin-top: 0 !important;
+      }
+      main > :last-child {
+        margin-bottom: 0 !important;
+      }
+      img {
+        max-width: 100%;
+      }
+    }
+    ::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* ================================================================= */
+    /* DRIFT WALL COMPONENT STYLES (3D Tilted Interactive Gallery)        */
+    /* ================================================================= */
+    .drift-wall {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      perspective: var(--dw-perspective, 1200px);
+      perspective-origin: 50% 50%;
+      --dw-tile-w: 220px;
+      --dw-tile-h: 145px;
+      --dw-gap: 18px;
+      --dw-radius: 16px;
+      --dw-lift: 64px;
+      --dw-dim: 0.62;
+      --dw-gray: 0;
+      --dw-overlay: #1e0910;
+      --dw-edge: 38%;
+      -webkit-mask-image: radial-gradient(ellipse 82% 86% at 50% 50%, #000 var(--dw-edge), transparent 100%), linear-gradient(to top, #000 var(--dw-edge), transparent 100%);
+      -webkit-mask-composite: source-in;
+      mask-image: radial-gradient(ellipse 82% 86% at 50% 50%, #000 var(--dw-edge), transparent 100%), linear-gradient(to top, #000 var(--dw-edge), transparent 100%);
+      mask-composite: intersect;
+    }
+
+    @media (max-width: 768px) {
+      .drift-wall {
+        --dw-tile-w: 150px;
+        --dw-tile-h: 100px;
+        --dw-gap: 12px;
+        --dw-radius: 12px;
+        --dw-lift: 36px;
+      }
+    }
+
+    .drift-wall__plane {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      display: flex;
+      flex-direction: row;
+      transform-style: preserve-3d;
+      cursor: pointer;
+      transform-origin: 50% 50%;
+      will-change: transform;
+    }
+
+    .drift-wall__col {
+      position: relative;
+      width: calc(var(--dw-tile-w) + var(--dw-gap));
+      transform-style: preserve-3d;
+    }
+
+    .drift-wall__track {
+      display: flex;
+      flex-direction: column;
+      will-change: transform;
+      transform-style: preserve-3d;
+    }
+
+    .drift-wall__tile {
+      position: relative;
+      display: block;
+      width: 100%;
+      height: calc(var(--dw-tile-h) + var(--dw-gap));
+      flex: 0 0 auto;
+      outline: none;
+      transform-style: preserve-3d;
+    }
+
+    .drift-wall__inner {
+      position: absolute;
+      inset: calc(var(--dw-gap) / 2);
+      display: block;
+      border-radius: var(--dw-radius);
+      overflow: hidden;
+      background: #240c13;
+      opacity: var(--dw-dim);
+      transform: translateZ(0);
+      pointer-events: none;
+      transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.42s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .drift-wall__tile img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: grayscale(var(--dw-gray)) saturate(0.95);
+      transition: filter 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    .drift-wall__overlay {
+      position: absolute;
+      inset: 0;
+      background: var(--dw-overlay);
+      opacity: 0.35;
+      pointer-events: none;
+      transition: opacity 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .drift-wall__caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 8px 12px;
+      background: linear-gradient(to top, rgba(36, 12, 19, 0.9) 0%, transparent 100%);
+      color: #FAF5F0;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: all 0.35s ease;
+      pointer-events: none;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .drift-wall__tile.is-active .drift-wall__inner,
+    .drift-wall__tile:focus-visible .drift-wall__inner {
+      opacity: 1;
+      transform: translateZ(var(--dw-lift));
+      box-shadow: 0 24px 60px -18px rgba(36, 12, 19, 0.8), 0 0 0 1px rgba(254, 153, 170, 0.4);
+    }
+
+    .drift-wall__tile.is-active img,
+    .drift-wall__tile:focus-visible img {
+      filter: grayscale(0) saturate(1.08);
+    }
+
+    .drift-wall__tile.is-active .drift-wall__overlay,
+    .drift-wall__tile:focus-visible .drift-wall__overlay {
+      opacity: 0;
+    }
+
+    .drift-wall__tile.is-active .drift-wall__caption,
+    .drift-wall__tile:focus-visible .drift-wall__caption {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .drift-wall__plane, .drift-wall__track {
+        will-change: auto;
+      }
+    }
+  </style>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-container-low": "#f9f2ec",
+            "on-tertiary": "#ffffff",
+            "tertiary-fixed": "#ffd9e1",
+            "on-surface-variant": "#504446",
+            "surface-variant": "#e8e1db",
+            "text-on-dark": "#FAF5F0",
+            "secondary-container": "#fe99aa",
+            "on-tertiary-fixed-variant": "#5e3e46",
+            "on-primary": "#ffffff",
+            "primary": "#260b14",
+            "on-error-container": "#93000a",
+            "error": "#ba1a1a",
+            "tertiary-fixed-dim": "#e7bbc5",
+            "error-container": "#ffdad6",
+            "on-error": "#ffffff",
+            "secondary-fixed": "#ffd9de",
+            "primary-fixed-dim": "#ebbac5",
+            "secondary": "#964455",
+            "primary-container": "#3e1f28",
+            "surface-card": "#F0E7DF",
+            "inverse-on-surface": "#f6efea",
+            "surface-tint": "#7a545e",
+            "on-primary-fixed-variant": "#603d46",
+            "primary-fixed": "#ffd9e1",
+            "outline-variant": "#d3c2c5",
+            "background": "#fff8f3",
+            "on-surface": "#1e1b18",
+            "on-primary-container": "#b0848e",
+            "inverse-primary": "#ebbac5",
+            "on-tertiary-container": "#ac858e",
+            "surface-dim": "#dfd9d3",
+            "surface-container-highest": "#e8e1db",
+            "on-primary-fixed": "#2f121b",
+            "on-tertiary-fixed": "#2d141b",
+            "surface": "#fff8f3",
+            "on-secondary-fixed": "#3f0114",
+            "secondary-fixed-dim": "#ffb2be",
+            "inverse-surface": "#33302c",
+            "on-secondary": "#ffffff",
+            "outline": "#827476",
+            "on-background": "#1e1b18",
+            "tertiary-container": "#3c2028",
+            "surface-container": "#f4ede7",
+            "border-subtle": "#E3D6CC",
+            "on-secondary-container": "#792d3e",
+            "tertiary": "#240c13",
+            "surface-container-high": "#eee7e1",
+            "surface-container-lowest": "#ffffff",
+            "on-secondary-fixed-variant": "#782d3e",
+            "surface-bright": "#fff8f3"
+          },
+          borderRadius: {
+            DEFAULT: "1rem",
+            lg: "2rem",
+            xl: "3rem",
+            full: "9999px"
+          },
+          spacing: {
+            "margin-desktop": "80px",
+            "section-gap-desktop": "128px",
+            "space-lg": "32px",
+            "space-md": "24px",
+            "space-xl": "48px",
+            "space-4xl": "128px",
+            "space-3xl": "96px",
+            "margin-mobile": "20px",
+            "space-xs": "8px",
+            "space-2xl": "64px",
+            "container-max": "1280px",
+            "gutter-desktop": "24px",
+            "section-gap-mobile": "80px",
+            "space-sm": "16px",
+            "space-5xl": "160px"
+          },
+          fontFamily: {
+            "display-hero": ["Geist", "sans-serif"],
+            "display-hero-mobile": ["Geist", "sans-serif"],
+            "headline-lg": ["Geist", "sans-serif"],
+            "headline-xl-mobile": ["Geist", "sans-serif"],
+            "headline-md": ["Geist", "sans-serif"],
+            "label-sm": ["Geist", "sans-serif"],
+            "headline-sm": ["Geist", "sans-serif"],
+            "label-md": ["Geist", "sans-serif"],
+            "body-lg": ["Geist", "sans-serif"],
+            "body-md": ["Geist", "sans-serif"],
+            "headline-lg-mobile": ["Geist", "sans-serif"],
+            "numeral-step": ["Geist", "sans-serif"],
+            "headline-xl": ["Geist", "sans-serif"]
+          },
+          fontSize: {
+            "display-hero": ["160px", { lineHeight: "0.85", letterSpacing: "-0.04em", fontWeight: "700" }],
+            "display-hero-mobile": ["84px", { lineHeight: "0.9", letterSpacing: "-0.03em", fontWeight: "700" }],
+            "headline-lg": ["56px", { lineHeight: "1.15", letterSpacing: "-0.025em", fontWeight: "700" }],
+            "headline-xl-mobile": ["44px", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "700" }],
+            "headline-md": ["32px", { lineHeight: "1.2", letterSpacing: "-0.015em", fontWeight: "600" }],
+            "label-sm": ["14px", { lineHeight: "1.0", letterSpacing: "0.02em", fontWeight: "500" }],
+            "headline-sm": ["20px", { lineHeight: "1.4", letterSpacing: "-0.01em", fontWeight: "600" }],
+            "label-md": ["15px", { lineHeight: "1.0", letterSpacing: "0.01em", fontWeight: "500" }],
+            "body-lg": ["18px", { lineHeight: "1.6", letterSpacing: "0", fontWeight: "400" }],
+            "body-md": ["16px", { lineHeight: "1.6", letterSpacing: "0", fontWeight: "400" }],
+            "headline-lg-mobile": ["36px", { lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "700" }],
+            "numeral-step": ["120px", { lineHeight: "0.9", letterSpacing: "-0.03em", fontWeight: "700" }],
+            "headline-xl": ["72px", { lineHeight: "1.05", letterSpacing: "-0.03em", fontWeight: "700" }]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-surface font-body-md text-on-surface antialiased">
+  <!-- ================================================================= -->
+  <!-- HEADER                                                            -->
+  <!-- ================================================================= -->
+  <header class="fixed top-4 sm:top-6 left-0 right-0 z-50 flex justify-center px-4">
+    <div class="w-full max-w-[1280px] h-[64px] sm:h-[72px] rounded-full bg-surface/80 backdrop-blur-[20px] shadow-[0_4px_24px_rgba(62,31,40,0.06)] px-4 sm:px-6 flex items-center justify-between transition-all">
+      
+      <!-- Mobil Hamburger Menü Butonu (Sadece mobilde görünür) -->
+      <button onclick="toggleMobileNav()" type="button" aria-label="Menüyü Aç" class="lg:hidden min-w-[44px] min-h-[44px] flex items-center justify-center text-primary hover:text-secondary transition-colors">
+        <span class="material-symbols-outlined text-[26px]">menu</span>
+      </button>
+
+      <!-- Logo -->
+      <a class="flex items-center gap-2 group" data-path="anasayfa" href="#">
+        <span class="font-headline-md text-[22px] sm:text-headline-md text-primary tracking-tight font-semibold">Serena</span>
+        <span class="font-label-sm text-label-sm uppercase tracking-widest text-secondary opacity-70 hidden sm:inline-block">Med Spa</span>
+      </a>
+
+      <!-- Masaüstü Navigasyon -->
+      <nav class="hidden lg:flex items-center gap-8" data-active-classes="text-primary font-semibold">
+        <a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors min-h-[44px] flex items-center" data-path="hakkimizda" href="#manifesto">Hakkımızda</a>
+        <a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors min-h-[44px] flex items-center" data-path="tedaviler" href="#tedaviler">Tedaviler</a>
+        <a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors min-h-[44px] flex items-center" data-path="sonuclar" href="#surec">Sonuçlar</a>
+        <a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors min-h-[44px] flex items-center" data-path="yorumlar" href="#yorumlar">Yorumlar</a>
+        <a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors min-h-[44px] flex items-center" data-path="iletisim" href="#randevu">İletişim</a>
+      </nav>
+
+      <!-- Sağ Butonlar -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <a class="inline-flex items-center h-[46px] sm:h-[52px] pl-4 sm:pl-6 pr-2 rounded-full bg-primary-container text-text-on-dark font-label-md text-label-md shadow-[0_4px_16px_rgba(62,31,40,0.08)] hover:-translate-y-0.5 hover:shadow-[0_12px_32px_rgba(62,31,40,0.16)] transition-all min-h-[44px]" data-path="randevu-al" href="#randevu">
+          <span class="mr-2 sm:mr-3 font-medium text-[13px] sm:text-[15px]">Randevu Al</span>
+          <div class="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-surface/15 flex items-center justify-center text-text-on-dark">
+            <span class="material-symbols-outlined text-[14px] sm:text-[16px]">north_east</span>
+          </div>
+        </a>
+        <div class="w-8 h-8 rounded-full bg-primary hidden sm:flex items-center justify-center">
+          <span class="material-symbols-outlined text-on-primary text-[18px]">person</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobil Drawer Menü -->
+  <div id="mobile-nav-drawer" class="fixed inset-0 z-50 bg-primary/95 backdrop-blur-xl text-text-on-dark transform -translate-x-full transition-transform duration-300 flex flex-col justify-between p-6 sm:p-8 pointer-events-none" aria-hidden="true">
+    <div>
+      <div class="flex items-center justify-between pb-6 border-b border-white/15">
+        <div class="flex items-center gap-2">
+          <span class="font-headline-md text-headline-md text-text-on-dark font-semibold">Serena</span>
+          <span class="font-label-sm text-label-sm uppercase tracking-widest text-secondary-container">Med Spa</span>
+        </div>
+        <button onclick="toggleMobileNav()" type="button" aria-label="Menüyü Kapat" class="min-w-[44px] min-h-[44px] rounded-full bg-white/10 flex items-center justify-center text-text-on-dark hover:bg-white/20 transition-colors">
+          <span class="material-symbols-outlined text-[24px]">close</span>
+        </button>
+      </div>
+      <nav class="flex flex-col space-y-6 pt-8 text-[20px] font-medium">
+        <a href="#manifesto" onclick="toggleMobileNav()" class="hover:text-secondary-container transition-colors min-h-[44px] flex items-center">Hakkımızda</a>
+        <a href="#tedaviler" onclick="toggleMobileNav()" class="hover:text-secondary-container transition-colors min-h-[44px] flex items-center">Tedaviler</a>
+        <a href="#surec" onclick="toggleMobileNav()" class="hover:text-secondary-container transition-colors min-h-[44px] flex items-center">Sonuçlar</a>
+        <a href="#yorumlar" onclick="toggleMobileNav()" class="hover:text-secondary-container transition-colors min-h-[44px] flex items-center">Yorumlar</a>
+        <a href="#randevu" onclick="toggleMobileNav()" class="hover:text-secondary-container transition-colors min-h-[44px] flex items-center">İletişim</a>
+      </nav>
+    </div>
+    <div class="pt-6 border-t border-white/15">
+      <a href="#randevu" onclick="toggleMobileNav()" class="w-full h-[52px] rounded-full bg-secondary hover:bg-secondary-container text-text-on-dark font-medium flex items-center justify-center gap-2 shadow-lg transition-all min-h-[44px]">
+        <span>RANDEVU AL</span>
+        <span class="material-symbols-outlined text-[18px]">north_east</span>
+      </a>
+      <p class="text-center text-sm text-text-on-dark/70 mt-4">+90 (212) 345 67 89 • Nişantaşı, İstanbul</p>
+    </div>
+  </div>
+
+  <main class="w-full pt-[96px] bg-surface">
+    <div class="flex flex-col w-full">
+      
+      <!-- ================================================================= -->
+      <!-- 1) HERO SECTION                                                   -->
+      <!-- ================================================================= -->
+      <section class="relative w-full min-h-screen -mt-[96px] pt-[96px] flex flex-col justify-between overflow-hidden bg-primary">
+        <!-- Background Image with Ambient Gradient Scrim -->
+        <div class="absolute inset-0 w-full h-full bg-cover bg-center" data-alt="Editorial tranquil portrait of a serene woman resting her head gently in a luxury high-end medical spa sanctuary, warm ambient candlelight, diffused soft golden hour sunlight through sheer beige linen curtains, soothing tones of rosewood, deep plum, and pale cream, cinematic depth of field, ultra-refined skin texture and calm atmosphere." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCzYzqVFxc_2KNJlvvn7LYCFNT4UKf_HTPuql0UChWY38GgVX7ElIOB5erU_SyXSc2B5bXbQO8k6REoFA--BmlxCycpBLmJZqskplK70lW8p-tXiHwswTEWvoTRN5jl4x251Mi1-oBmraGAGITeBK52kVar6ds2gzVuGFFOiZQSMVWmVmZdSSBfM2czG_PeQ7OrQmtukvli9bNyxw4GnGFc_t4II3ypVFFIK-boVvd61iWKCk62QsSC')"></div>
+        <!-- Sophisticated Gradient Overlays for High Contrast -->
+        <div class="absolute inset-0 bg-gradient-to-t from-primary/95 via-primary/45 to-primary/40 pointer-events-none"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-primary/70 via-transparent to-primary/30 pointer-events-none"></div>
+        <!-- Top Spacer for Breathing Room -->
+        <div class="relative z-10 w-full pt-space-xl"></div>
+        <!-- Mid Tier: Asymmetrical Editorial Narrative & Direct Actions -->
+        <div class="relative z-10 w-full max-w-[1280px] mx-auto px-5 sm:px-6 lg:px-space-md py-8 sm:py-space-xl">
+          <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 sm:gap-space-lg">
+            <!-- Left Editorial Quote -->
+            <div class="max-w-md space-y-3 sm:space-y-4">
+              <div class="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-surface/20 backdrop-blur-md text-text-on-dark font-label-sm text-label-sm tracking-wide">
+                <span class="w-2 h-2 rounded-full bg-secondary-container"></span>
+                Kişiselleştirilmiş Medikal Estetik
+              </div>
+              <p class="font-body-lg text-[15px] sm:text-body-lg text-text-on-dark font-light leading-relaxed drop-shadow-sm">
+                Cildinize ve kendinize hak ettiğiniz özeni verin. Uzman hekim kadromuz ve ileri teknolojiyle donatılmış kişiye özel bakım protokolleri.
+              </p>
+            </div>
+            <!-- Right Action Button Cluster -->
+            <div class="flex flex-wrap items-center gap-3 sm:gap-4">
+              <a class="inline-flex items-center h-[48px] sm:h-[52px] px-6 sm:px-7 rounded-full bg-primary text-text-on-dark font-label-md text-label-md shadow-[0_4px_16px_rgba(62,31,40,0.25)] hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(62,31,40,0.35)] transition-all duration-300 min-h-[44px]" href="#randevu">
+                <span class="mr-3 font-medium">Randevu Al</span>
+                <div class="w-7 h-7 rounded-full bg-surface/15 flex items-center justify-center text-text-on-dark">
+                  <span class="material-symbols-outlined text-[16px]">north_east</span>
+                </div>
+              </a>
+              <a class="inline-flex items-center h-[48px] sm:h-[52px] px-6 sm:px-8 rounded-full bg-surface-card/90 backdrop-blur-md text-primary font-label-md text-label-md shadow-[0_4px_16px_rgba(62,31,40,0.1)] hover:-translate-y-1 hover:bg-surface-card transition-all duration-300 min-h-[44px]" href="#tedaviler">
+                <span>Tedavileri Gör</span>
+              </a>
+            </div>
+          </div>
+        </div>
+        <!-- Monumental Typography & Visual Progress Bar -->
+        <div class="relative z-10 w-full overflow-hidden flex flex-col items-center">
+          <!-- Colossal Brandmark Heading (Masaüstünde devasa 160px, mobilde orantılı sığar) -->
+          <h1 class="w-full text-center font-display-hero text-[64px] sm:text-[100px] lg:text-display-hero text-text-on-dark opacity-95 tracking-tighter select-none pointer-events-none -mb-4 sm:-mb-8 lg:-mb-14 leading-none">
+            Serena
+          </h1>
+          <!-- 4-Stage Slider Indicator Bars -->
+          <div class="w-full max-w-[1280px] mx-auto px-5 sm:px-6 lg:px-space-md pb-space-md pt-4 sm:pt-6 flex items-center gap-2 sm:gap-3">
+            <div class="h-1 flex-1 rounded-full bg-text-on-dark transition-all duration-500"></div>
+            <div class="h-1 flex-1 rounded-full bg-text-on-dark/30 hover:bg-text-on-dark/60 transition-all duration-500 cursor-pointer"></div>
+            <div class="h-1 flex-1 rounded-full bg-text-on-dark/30 hover:bg-text-on-dark/60 transition-all duration-500 cursor-pointer"></div>
+            <div class="h-1 flex-1 rounded-full bg-text-on-dark/30 hover:bg-text-on-dark/60 transition-all duration-500 cursor-pointer"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================= -->
+      <!-- 2) MANIFESTO SECTION + DRIFT WALL 3D CANLI GALERİ                 -->
+      <!-- ================================================================= -->
+      <section id="manifesto" class="w-full bg-surface-container-low py-[72px] sm:py-[100px] lg:py-[140px] px-5 sm:px-6 lg:px-space-md relative overflow-hidden">
+        <!-- Subtle Ambient Placed Glow -->
+        <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-secondary-container/15 rounded-full blur-[120px] pointer-events-none"></div>
+        <div class="w-full max-w-[1080px] mx-auto text-center relative z-10 flex flex-col items-center">
+          <!-- Section Pre-header Pill -->
+          <div class="inline-flex items-center h-[36px] px-5 rounded-full bg-surface-card text-primary font-label-sm text-label-sm uppercase tracking-widest mb-6 sm:mb-space-lg shadow-sm">
+            Manifestomuz
+          </div>
+          <!-- Monumental Philosophical Statement -->
+          <p class="font-headline-lg text-[26px] sm:text-[38px] lg:text-headline-lg text-primary font-semibold tracking-tight leading-[1.2] lg:leading-[1.15] mb-8 sm:mb-space-xl">
+            “Güzelliği zorlamıyoruz; cildinizin kendi dengesini bulmasına yardım ediyoruz. Her protokol yalnızca size özel hazırlanır.”
+          </p>
+          <!-- Contextual Action Buttons -->
+          <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+            <a class="inline-flex items-center h-[48px] sm:h-[52px] px-7 sm:px-8 rounded-full bg-primary text-text-on-dark font-label-md text-label-md shadow-[0_4px_16px_rgba(62,31,40,0.12)] hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(62,31,40,0.2)] transition-all duration-300 min-h-[44px]" href="#randevu">
+              Hikayemiz
+            </a>
+            <a class="inline-flex items-center h-[48px] sm:h-[52px] px-7 sm:px-8 rounded-full bg-surface-card text-primary font-label-md text-label-md shadow-[0_4px_16px_rgba(62,31,40,0.06)] hover:-translate-y-1 transition-all duration-300 min-h-[44px]" href="#tedaviler">
+              Tedaviler
+            </a>
+          </div>
+        </div>
+
+        <!-- ================================================================= -->
+        <!-- DRIFT WALL 3D CANLI GALERİ (EKTEKİ KORUNAN ÖZEL BÖLÜM)            -->
+        <!-- ================================================================= -->
+        <div class="w-full max-w-[1360px] mx-auto mt-12 sm:mt-16 relative z-10">
+          <div class="w-full h-[440px] sm:h-[580px] rounded-[24px] sm:rounded-[36px] overflow-hidden relative shadow-[0_24px_60px_rgba(36,12,19,0.15)] border border-border-subtle/80 bg-[#16060c]">
+            <div id="drift-wall" class="drift-wall" role="group" aria-label="Serena Medikal Spa Canlı 3D Görsel Duvarı">
+              <div id="drift-wall-plane" class="drift-wall__plane"></div>
+            </div>
+            <!-- Alt sol köşede şık bilgilendirme etiketi -->
+            <div class="absolute bottom-4 left-5 sm:bottom-6 sm:left-6 z-20 pointer-events-none flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#240c13]/85 backdrop-blur-md border border-white/10 text-[#FAF5F0] text-[12px]">
+              <span class="w-2 h-2 rounded-full bg-secondary-container animate-pulse"></span>
+              <span class="font-medium">Klinik Atmosferi, Protokoller ve Huzur Alanları</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================= -->
+      <!-- 3) SERVICES & PROTOCOLS (TEDAVİLER)                               -->
+      <!-- ================================================================= -->
+      <section class="w-full bg-surface py-[64px] sm:py-space-4xl px-5 sm:px-6 lg:px-space-md" id="tedaviler">
+        <div class="w-full max-w-[1280px] mx-auto">
+          <!-- Section Header -->
+          <div class="flex flex-col items-center text-center max-w-2xl mx-auto mb-10 sm:mb-space-xl">
+            <div class="inline-flex items-center h-[36px] px-5 rounded-full bg-surface-card text-primary font-label-sm text-label-sm uppercase tracking-widest mb-4">
+              Tedaviler
+            </div>
+            <h2 class="font-headline-xl text-[30px] sm:text-[44px] lg:text-headline-xl text-primary font-bold tracking-tight mb-4 leading-tight">
+              Size Özel Bakım Protokolleri
+            </h2>
+            <p class="font-body-lg text-[15px] sm:text-body-lg text-on-surface-variant font-normal leading-relaxed">
+              Tıbbi dermatoloji ve yenileyici estetiğin en güncel cihazlarıyla formüle edilmiş, kişiselleştirilmiş uygulamalar.
+            </p>
+          </div>
+          <!-- 3x2 Grid Cards (Masaüstü 3, Tablet 2, Mobil 1 sütun) -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-gutter-desktop">
+            <!-- Card 1 -->
+            <div class="group bg-surface-card rounded-lg p-6 sm:p-[40px] shadow-[0_4px_16px_rgba(62,31,40,0.06)] hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(62,31,40,0.12)] transition-all duration-300 flex flex-col justify-between">
+              <div class="space-y-4 sm:space-y-6">
+                <div class="w-full h-48 sm:h-56 rounded-[20px] overflow-hidden">
+                  <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="Close up aesthetic shot of high tech collagen stimulation therapy on soft glowing skin, luxury clinic setting, neutral cream and gentle burgundy aesthetic, gentle warm directional lighting, medical elegance." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAA_uwBpuxu3LwtfMopdhkUdqif8TxD7TAK1dzDefA7j4Ny4_sE-pw4MrBbTeBIkkTBfr0NVs9aNhIM1cPuWFTJYJSaX1oZb2lUETEK5pbbFnyMspybaxbO_72NQJb7ZGXBKYVTP3HbAXBGqHC7R1sSCoA86C8UjlITW6-uLZ7YxDj4xtplL5t_ceNqbBL-mKZqIlxdJiZp-nlwdxh_T0wYBn6PRJ3hXde64seaFRAmYrYkxVTCqAGB"/>
+                </div>
+                <div class="space-y-2">
+                  <h3 class="font-headline-md text-[22px] sm:text-headline-md text-primary font-semibold">Cilt Gençleştirme</h3>
+                  <p class="font-body-md text-[15px] sm:text-body-md text-on-surface-variant line-clamp-2">
+                    Cilt dokusunu yenileyen ve doğal ışıltıyı geri kazandıran ileri teknoloji kolajen stimülasyonu.
+                  </p>
+                </div>
+              </div>
+              <div class="pt-6 flex justify-end">
+                <a href="#randevu" aria-label="Cilt Gençleştirme Detayı" class="w-12 h-12 rounded-full bg-primary text-text-on-dark flex items-center justify-center shadow-md group-hover:bg-primary-container transition-colors min-h-[44px]">
+                  <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+                </a>
+              </div>
+            </div>
+            <!-- Card 2 -->
+            <div class="group bg-surface-card rounded-lg p-6 sm:p-[40px] shadow-[0_4px_16px_rgba(62,31,40,0.06)] hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(62,31,40,0.12)] transition-all duration-300 flex flex-col justify-between">
+              <div class="space-y-4 sm:space-y-6">
+                <div class="w-full h-48 sm:h-56 rounded-[20px] overflow-hidden">
+                  <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="Dermatological hydra facial treatment with water droplet infusions and botanical serums on clean face, calm spa atmosphere, soft rose beige background tones, ultra clean luxury beauty." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTKcYAJkhjUWFJpmyG2h7AMCpcxTUGZ1msKlWVxBhFJZ7pd5qIIeJaZV4iFF_J_uAN9PvIwRrGSaFyjpJ6_i6Ogflb3wP-kPQHmdVN5_FqFmscdIsWm_G6clNUpG9BIIp9uvasCM29MfGLM0FAVilAZWDK7BcOR18wdI6EYtmA7eQItOvLKfVI7rpJBiZZIUefau_p3ijlf6Z9X-0vcmOk5OkX1ljzzdN5SyXNqSUAti6dkQiaJ-r3"/>
+                </div>
+                <div class="space-y-2">
+                  <h3 class="font-headline-md text-[22px] sm:text-headline-md text-primary font-semibold">Medikal Cilt Bakımı</h3>
+                  <p class="font-body-md text-[15px] sm:text-body-md text-on-surface-variant line-clamp-2">
+                    Derinlemesine gözenek temizliği, hyaluronik asit nem takviyesi ve kişiye özel formüle edilen serumlar.
+                  </p>
+                </div>
+              </div>
+              <div class="pt-6 flex justify-end">
+                <a href="#randevu" aria-label="Medikal Cilt Bakımı Detayı" class="w-12 h-12 rounded-full bg-primary text-text-on-dark flex items-center justify-center shadow-md group-hover:bg-primary-container transition-colors min-h-[44px]">
+                  <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+                </a>
+              </div>
+            </div>
+            <!-- Card 3 -->
+            <div class="group bg-surface-card rounded-lg p-6 sm:p-[40px] shadow-[0_4px_16px_rgba(62,31,40,0.06)] hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(62,31,40,0.12)] transition-all duration-300 flex flex-col justify-between">
+              <div class="space-y-4 sm:space-y-6">
+                <div class="w-full h-48 sm:h-56 rounded-[20px] overflow-hidden">
+                  <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="Modern precision medical aesthetic laser handpiece gliding smoothly over flawless bare skin, cooling glass crystal touch, warm aesthetic clinic room with earth tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzETcQqIgK5xGqzJ24Bzif5kXR40Wr4xMTJFYUZLJoRaOxibG8LCHJ2Z-Cz7FgxV9aOL5d78dJRBH6iXbBRsxwNGdtZaryR8UJ89pXGtts3KjnqfN0T3bx0Smra0HViIdMER5M8Vzw_W3S1AuHsx42QNX1msxPcuLWpmMyjxr21KuLY9E6jgLR9tiXzbiVA09siGVTisJCQiGUBMi4kL77wVuWNfhKVPFh1a-WmmfvC2YcP8UzH4oV"/>
+                </div>
+                <div class="space-y-2">
+                  <h3 class="font-headline-md text-[22px] sm:text-headline-md text-primary font-semibold">Lazer Epilasyon</h3>
+                  <p class="font-body-md text-[15px] sm:text-body-md text-on-surface-variant line-clamp-2">
+                    Ağrısız, FDA onaylı son teknoloji hibrit lazer sistemi ile pürüzsüz ve kalıcı konfor.
+                  </p>
+                </div>
+              </div>
+              <div class="pt-6 flex justify-end">
+                <a href="#randevu" aria-label="Lazer Epilasyon Detayı" class="w-12 h-12 rounded-full bg-primary text-text-on-dark flex items-center justify-center shadow-md group-hover:bg-primary-container transition-colors min-h-[44px]">
+                  <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+                </a>
+              </div>
+            </div>
+            <!-- Card 4 -->
+            <div class="group bg-surface-card rounded-lg p-6 sm:p-[40px] shadow-[0_4px_16px_rgba(62,31,40,0.06)] hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(62,31,40,0.12)] transition-all duration-300 flex flex-col justify-between">
+              <div class="space-y-4 sm:space-y-6">
+                <div class="w-full h-48 sm:h-56 rounded-[20px] overflow-hidden">
+                  <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="Non-surgical body contouring massage therapy with ergonomic applicator, sculpting treatment in a minimalist tranquil spa suite, warm stone surfaces and soft shadows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuArPiqIr5q25jU9NCOp5ua1B7AqZ7HpkMSz_qq0nNvyhKALTYqPDUJ8u0qIFfDcAB96XBZ_KfsuVuwVp4VeqSAHXLJnYt5dKzSHBvRYInssrOyLMmjM7-bHGVFeGkQ75hanAVv3qbh8hj5iZvCAkSNyvUUopHpnsLK_Mr-_fU_DKoScjlWMU7ybsuGiTqWphuDMPKnvRH_NXy20SY_PGZ7EoHvmgtRAsQwmzde_jGOilW3X9XhASeW5"/>
+                </div>
+                <div class="space-y-2">
+                  <h3 class="font-headline-md text-[22px] sm:text-headline-md text-primary font-semibold">Bölgesel İncelme</h3>
+                  <p class="font-body-md text-[15px] sm:text-body-md text-on-surface-variant line-clamp-2">
+                    Cerrahi müdahalesiz, hedef odaklı yağ parçalama ve sıkılaştırıcı kontür uygulamaları.
+                  </p>
+                </div>
+              </div>
+              <div class="pt-6 flex justify-end">
+                <a href="#randevu" aria-label="Bölgesel İncelme Detayı" class="w-12 h-12 rounded-full bg-primary text-text-on-dark flex items-center justify-center shadow-md group-hover:bg-primary-container transition-colors min-h-[44px]">
+                  <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+                </a>
+              </div>
+            </div>
+            <!-- Card 5 -->
+            <div class="group bg-surface-card rounded-lg p-6 sm:p-[40px] shadow-[0_4px_16px_rgba(62,31,40,0.06)] hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(62,31,40,0.12)] transition-all duration-300 flex flex-col justify-between">
+              <div class="space-y-4 sm:space-y-6">
+                <div class="w-full h-48 sm:h-56 rounded-[20px] overflow-hidden">
+                  <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="Hair mesotherapy peptide ampoule and micro injector applicator placed delicately on polished beige travertine marble, sterile and ultra-luxurious clinical aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDjVfb35nWwxFDGNhklhIN7mqAt12zzbx3TtbcbkIW4il46_PpMxGEGUB41ew_NSwNr051fkcSRP4pxz3TvG0B9DdFQpC-eUwGLr0nRKeKgxvmBpa1vJcR22dFNzp8lLq9ity18yFLYBoQRVctfLeUOxaFrkjaZFqLQRPgvcsH5umE2zA9WTGXfwa7KSarYmPR8tv69ENx8nMcynli8obpJm-BW0ZUkLWSjDaqDTY0_DhFxuMrOQt0"/>
+                </div>
+                <div class="space-y-2">
+                  <h3 class="font-headline-md text-[22px] sm:text-headline-md text-primary font-semibold">Saç Bakımı &amp; Mezoterapi</h3>
+                  <p class="font-body-md text-[15px] sm:text-body-md text-on-surface-variant line-clamp-2">
+                    Saç köklerini canlandıran, dökülmeyi durduran zengin vitamin ve peptid kompleksleri.
+                  </p>
+                </div>
+              </div>
+              <div class="pt-6 flex justify-end">
+                <a href="#randevu" aria-label="Saç Bakımı Detayı" class="w-12 h-12 rounded-full bg-primary text-text-on-dark flex items-center justify-center shadow-md group-hover:bg-primary-container transition-colors min-h-[44px]">
+                  <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+                </a>
+              </div>
+            </div>
+            <!-- Card 6 -->
+            <div class="group bg-surface-card rounded-lg p-6 sm:p-[40px] shadow-[0_4px_16px_rgba(62,31,40,0.06)] hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(62,31,40,0.12)] transition-all duration-300 flex flex-col justify-between">
+              <div class="space-y-4 sm:space-y-6">
+                <div class="w-full h-48 sm:h-56 rounded-[20px] overflow-hidden">
+                  <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="Doctor in clean minimalist aesthetic coat preparing micro-dose contouring treatment, elegant delicate glass syringe, ambient soft plum accents, high-end private practice atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBX2UhRCofkNAQvirO7zpSfxYT-jvlvpqYDSE3iU9kp_R7CM2wHVxj0Ymav90H3HkKUbaRTX_brOTnFj-wrvuNvH-dZoBlBOpbZ-v0q8UOqXpikt774idff1BqNj37b5XcsLdF3fkAjnSyZ7CNHDcZbWpGluwrVB8Tz0tS6IKOhIfTDcfi9pA7V4-tdbyavVu4QuuvwXBhrYsahw8XT3-xObS3xLqdmoNzDWTo8qW4-cTO5o_GkCu3g"/>
+                </div>
+                <div class="space-y-2">
+                  <h3 class="font-headline-md text-[22px] sm:text-headline-md text-primary font-semibold">Dolgu &amp; Botoks</h3>
+                  <p class="font-body-md text-[15px] sm:text-body-md text-on-surface-variant line-clamp-2">
+                    Doğal mimikleri koruyarak hatları tazeleyen, uzman hekim kontrolünde mikro-doz dokunuşlar.
+                  </p>
+                </div>
+              </div>
+              <div class="pt-6 flex justify-end">
+                <a href="#randevu" aria-label="Dolgu &amp; Botoks Detayı" class="w-12 h-12 rounded-full bg-primary text-text-on-dark flex items-center justify-center shadow-md group-hover:bg-primary-container transition-colors min-h-[44px]">
+                  <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================= -->
+      <!-- 4) PROCESS SECTION (NASIL İŞLİYOR)                                -->
+      <!-- ================================================================= -->
+      <section class="w-full bg-surface-container-low py-[64px] sm:py-space-4xl px-5 sm:px-6 lg:px-space-md" id="surec">
+        <div class="w-full max-w-[1280px] mx-auto">
+          <!-- Section Header -->
+          <div class="flex flex-col items-center text-center max-w-2xl mx-auto mb-10 sm:mb-space-xl">
+            <div class="inline-flex items-center h-[36px] px-5 rounded-full bg-surface-card text-primary font-label-sm text-label-sm uppercase tracking-widest mb-4">
+              Süreç
+            </div>
+            <h2 class="font-headline-xl text-[30px] sm:text-[44px] lg:text-headline-xl text-primary font-bold tracking-tight">
+              Yolculuğunuz Burada Başlıyor
+            </h2>
+          </div>
+          <!-- Vertical Stack of 3 Process Step Cards -->
+          <div class="space-y-6 sm:space-y-8">
+            <!-- Step 1 -->
+            <div class="bg-surface-card rounded-lg p-6 lg:p-[48px] shadow-[0_4px_16px_rgba(62,31,40,0.06)]">
+              <div class="flex flex-col lg:flex-row items-center justify-between gap-6 sm:gap-8">
+                <div class="w-full lg:w-3/5 flex flex-col justify-between">
+                  <!-- Card Top Row -->
+                  <div class="flex items-center justify-between w-full mb-4 sm:mb-6">
+                    <div class="inline-flex items-center h-[36px] px-4 rounded-full bg-surface text-primary font-label-sm text-label-sm font-semibold">
+                      Adım 01
+                    </div>
+                    <div class="font-numeral-step text-[64px] sm:text-[90px] lg:text-numeral-step text-secondary opacity-30 select-none leading-none">
+                      01
+                    </div>
+                  </div>
+                  <!-- Card Main Copy -->
+                  <div>
+                    <h3 class="font-headline-lg text-[26px] sm:text-[36px] lg:text-headline-lg text-primary font-bold tracking-tight mb-3 sm:mb-4">
+                      Analiz
+                    </h3>
+                    <p class="font-body-lg text-[15px] sm:text-body-lg text-on-surface-variant font-normal leading-relaxed max-w-xl">
+                      <span class="font-semibold text-primary">Ücretsiz Cilt Analizi:</span> Cildinizin alt katmanlarını 3D dijital tarama ile derinlemesine inceleyip nem, elastikiyet ve pigmentasyon ihtiyaçlarını haritalandırıyoruz.
+                    </p>
+                  </div>
+                </div>
+                <!-- Square Image -->
+                <div class="w-full lg:w-2/5 aspect-square max-w-[380px] rounded-[20px] overflow-hidden shadow-sm">
+                  <img class="w-full h-full object-cover" data-alt="Close up of medical skin analysis scanning machine sensor scanning a serene face with soft infrared lighting, high-tech aesthetics, warm travertine tones, medical consultation." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1uFC526XGfXZScOjOHEwbUjfQgYtQPiUHA3qAQVUB-0bhHDIMvMQ6I7To5kBClTDf8Bt97CFpLhLNq-QLLj-ztfSLphnHBLbMrUZ43DYJNpIyDD9-dzvWFFn4k9LdEwrFnN5LdnUUNERyM9Gaf7fc9BnVTr1c4DRjkHDCu1_KpAT4cCcydIsd8W82xwIizuNGNlZcrBEYC22uEAh_m0NOaiY8vgN9_OGhpnwmbH6UFvgXNrkMmCno"/>
+                </div>
+              </div>
+            </div>
+            <!-- Step 2 -->
+            <div class="bg-surface-card rounded-lg p-6 lg:p-[48px] shadow-[0_4px_16px_rgba(62,31,40,0.06)]">
+              <div class="flex flex-col lg:flex-row items-center justify-between gap-6 sm:gap-8">
+                <div class="w-full lg:w-3/5 flex flex-col justify-between">
+                  <div class="flex items-center justify-between w-full mb-4 sm:mb-6">
+                    <div class="inline-flex items-center h-[36px] px-4 rounded-full bg-surface text-primary font-label-sm text-label-sm font-semibold">
+                      Adım 02
+                    </div>
+                    <div class="font-numeral-step text-[64px] sm:text-[90px] lg:text-numeral-step text-secondary opacity-30 select-none leading-none">
+                      02
+                    </div>
+                  </div>
+                  <div>
+                    <h3 class="font-headline-lg text-[26px] sm:text-[36px] lg:text-headline-lg text-primary font-bold tracking-tight mb-3 sm:mb-4">
+                      Plan
+                    </h3>
+                    <p class="font-body-lg text-[15px] sm:text-body-lg text-on-surface-variant font-normal leading-relaxed max-w-xl">
+                      <span class="font-semibold text-primary">Kişiye Özel Protokol:</span> Yaşam tarzınıza, cilt yapınıza ve arzuladığınız hedeflere en uygun çok adımlı medikal bakım ve koruma planını detaylandırıyoruz.
+                    </p>
+                  </div>
+                </div>
+                <div class="w-full lg:w-2/5 aspect-square max-w-[380px] rounded-[20px] overflow-hidden shadow-sm">
+                  <img class="w-full h-full object-cover" data-alt="Doctor reviewing a personalized skin wellness treatment chart on a digital pad inside a sunlit serene clinic office with organic wood and linen finishes." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDd-aMwfl-8DewIwADn1ak53xmQDv9Hene9HK1fPHvSLrLS8ys4s_qie3oF4NPCPpaIZkEXN1v--H7RqDTc8IUglwy90yNO9XOajNBO4bCL50V1KALElDA8snrfB_aTAleHV5MA2GN7TjvH3wCclhpHT6vsiw0GSEucKGs5DVwy3vd4MLbdVi0GqekxLONIAMMBQmjqU1ObCOfIo4dSNrA7IybovqVLIWfX57f3l85-BuxhYPX9aUh5"/>
+                </div>
+              </div>
+            </div>
+            <!-- Step 3 -->
+            <div class="bg-surface-card rounded-lg p-6 lg:p-[48px] shadow-[0_4px_16px_rgba(62,31,40,0.06)]">
+              <div class="flex flex-col lg:flex-row items-center justify-between gap-6 sm:gap-8">
+                <div class="w-full lg:w-3/5 flex flex-col justify-between">
+                  <div class="flex items-center justify-between w-full mb-4 sm:mb-6">
+                    <div class="inline-flex items-center h-[36px] px-4 rounded-full bg-surface text-primary font-label-sm text-label-sm font-semibold">
+                      Adım 03
+                    </div>
+                    <div class="font-numeral-step text-[64px] sm:text-[90px] lg:text-numeral-step text-secondary opacity-30 select-none leading-none">
+                      03
+                    </div>
+                  </div>
+                  <div>
+                    <h3 class="font-headline-lg text-[26px] sm:text-[36px] lg:text-headline-lg text-primary font-bold tracking-tight mb-3 sm:mb-4">
+                      Bakım
+                    </h3>
+                    <p class="font-body-lg text-[15px] sm:text-body-lg text-on-surface-variant font-normal leading-relaxed max-w-xl">
+                      <span class="font-semibold text-primary">Uygulama ve Takip:</span> Uzman hekim ve estetisyenler eşliğinde dinlendirici, konforlu seanslar ve sonuçların kalıcılığını sağlayan periyodik kontrol takvimi.
+                    </p>
+                  </div>
+                </div>
+                <div class="w-full lg:w-2/5 aspect-square max-w-[380px] rounded-[20px] overflow-hidden shadow-sm">
+                  <img class="w-full h-full object-cover" data-alt="Relaxing restorative spa aesthetic facial session, gentle hands applying rich nourishing botanical cream on closed eyes client, soothing warm atmosphere, peaceful." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLERttDk0na5N5fYa_ClOc0HhR0LD07PNq4bHk3mypxvHszIoPh87KZnv3YHrdAQUf1PUwhfdG01xhDZW6h1LPfP-Ovw8D9L6FFUPSRLIpuy68Tu8gJ-sRm_nYo2wvAEn9gOQOvC_yFg1fAPwPg-Z2dds96iZx7HLeJE1zYt5YPdAIWdqYBL7V1ovRxGNp3FM32LyjfwBH0M9gXv9yTy38GUpQYJQZMvnq99MG0tjJBf3OdImJWhKA"/>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================= -->
+      <!-- 5) TESTIMONIALS / CLIENT FEEDBACK                                 -->
+      <!-- ================================================================= -->
+      <section class="w-full bg-surface py-[64px] sm:py-space-4xl px-5 sm:px-6 lg:px-space-md overflow-hidden" id="yorumlar">
+        <div class="w-full max-w-[1280px] mx-auto">
+          <!-- Section Pre-header -->
+          <div class="flex flex-col items-center text-center max-w-2xl mx-auto mb-10 sm:mb-space-xl">
+            <div class="inline-flex items-center h-[36px] px-5 rounded-full bg-surface-card text-primary font-label-sm text-label-sm uppercase tracking-widest mb-4">
+              Yorumlar
+            </div>
+            <h2 class="font-headline-xl text-[30px] sm:text-[44px] lg:text-headline-xl text-primary font-bold tracking-tight">
+              Danışanlarımız Ne Diyor
+            </h2>
+          </div>
+          <!-- Horizontal Showcase / Carousel Composition -->
+          <div class="relative flex items-center justify-center gap-6">
+            <!-- Left Peeking Preview Card (Desktop) -->
+            <div class="hidden xl:block w-72 shrink-0 opacity-40 blur-[1px] select-none scale-95 pointer-events-none bg-surface-card rounded-lg p-8">
+              <div class="space-y-4">
+                <div class="h-6 w-24 bg-surface rounded-full"></div>
+                <p class="font-headline-sm text-headline-sm text-primary">"Kusursuz ilgi ve harika bir atmosfer..."</p>
+                <p class="font-body-md text-body-md text-on-surface-variant">Düzenli olarak geldiğim tek medikal klinik oldu.</p>
+              </div>
+            </div>
+            <!-- Center Stage Featured Card -->
+            <div class="w-full max-w-4xl bg-surface-card rounded-lg p-6 lg:p-[48px] shadow-[0_12px_32px_rgba(62,31,40,0.1)] flex flex-col lg:flex-row gap-6 sm:gap-8 items-center">
+              <!-- Text Content -->
+              <div class="w-full lg:w-3/5 flex flex-col justify-between space-y-4 sm:space-y-6">
+                <div class="space-y-3 sm:space-y-4">
+                  <div class="inline-flex items-center h-[32px] px-4 rounded-full bg-surface text-secondary font-label-sm text-label-sm font-semibold">
+                    Cilt Gençleştirme &amp; Bakım
+                  </div>
+                  <blockquote class="font-headline-md text-[20px] sm:text-headline-md text-primary font-semibold leading-tight">
+                    “Cildimdeki yorgunluk hissi ilk seanstan sonra tamamen kayboldu.”
+                  </blockquote>
+                  <p class="font-body-md text-[15px] sm:text-body-md text-on-surface-variant leading-relaxed">
+                    Yıllardır çözemediğim ton eşitsizliği ve mat görünüm için Serena’ya başvurdum. Kişiselleştirilmiş kolajen stimülasyon protokolü sayesinde makyaj yapma ihtiyacım kalmadı. Klinik ortamı ise adeta bir vaha.
+                  </p>
+                </div>
+                <!-- Profile & Date Row -->
+                <div class="flex items-center gap-4 pt-2 sm:pt-4">
+                  <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full overflow-hidden shrink-0 shadow-sm">
+                    <img class="w-full h-full object-cover" data-alt="Portrait photo of a stylish Turkish woman named Leyla K, an architect in her late 30s with natural elegant glow and genuine smile, natural daylight." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAj66ykefpPI9kGiYiaF1yyUX7hxeqlstcJEM656nIRGWAxYncBDKWx5-KXySzO39b_vWCQQf45nUaDwRHJB_skdwyEjxtZ-XrDENs9uhtE4B8NKz-YZzoGCGUTn1L0FWmh3emVBz0iFWOxSj_HW0LtvVlbZyXRw1IvqtUGsf8c9e1ohXkbxGgfAjwQ7akbio97hJGjtHpSLJoldOdi8LQX5_gg-vOYKpQegiRHZJDQfp0xzQZr2CbV"/>
+                  </div>
+                  <div>
+                    <h4 class="font-headline-sm text-[17px] sm:text-headline-sm text-primary font-semibold">Leyla K.</h4>
+                    <p class="font-body-md text-[13px] sm:text-body-md text-on-surface-variant">Mimar • <span class="text-secondary font-medium">Ekim 2024</span></p>
+                  </div>
+                </div>
+              </div>
+              <!-- Vertical Warm Portrait Right -->
+              <div class="w-full lg:w-2/5 h-64 sm:h-80 lg:h-96 rounded-[20px] overflow-hidden shadow-sm shrink-0">
+                <img class="w-full h-full object-cover" data-alt="Editorial warm daylight portrait of a radiant relaxed woman with glowing hydrated skin resting in a luxury spa lounge, soft tones of ivory, plum and warm beige." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBbe6UIYVXLihLKdFSZ57VmP4kng9oodlhkuW9CWnwsF1HZcrZLqqB21RANX_uSCuEwY7ny2WXi62358PBhnI6i0z-l9whVd1temrLfaP5jO1gvRa4b85WJboQWaFFV2eZRABpyTsawotTWFWGAd-9tX6VGT4szqwnynACL1NpDmlWYAehMeg6l0OHRc3Xg1Tkxm0OuMmhUlLLyTpgJ_e47hXUxzPM089E-G5FwvU0trFJRqVBaSgy"/>
+              </div>
+            </div>
+            <!-- Right Peeking Preview Card (Desktop) -->
+            <div class="hidden xl:block w-72 shrink-0 opacity-40 blur-[1px] select-none scale-95 pointer-events-none bg-surface-card rounded-lg p-8">
+              <div class="space-y-4">
+                <div class="h-6 w-24 bg-surface rounded-full"></div>
+                <p class="font-headline-sm text-headline-sm text-primary">"Doğallığı kaybetmeden gençleşmek..."</p>
+                <p class="font-body-md text-body-md text-on-surface-variant">Hekimlerin yaklaşımı ve detaylı analiz güven veriyor.</p>
+              </div>
+            </div>
+          </div>
+          <!-- 3 Carousel Dot Indicators -->
+          <div class="flex items-center justify-center gap-3 mt-space-lg">
+            <button aria-label="Yorum 1" class="w-3 h-3 rounded-full bg-primary transition-all min-h-[44px] flex items-center cursor-pointer"><span class="w-3 h-3 rounded-full bg-primary"></span></button>
+            <button aria-label="Yorum 2" class="w-3 h-3 rounded-full bg-primary/20 hover:bg-primary/40 transition-all min-h-[44px] flex items-center cursor-pointer"><span class="w-3 h-3 rounded-full bg-primary/20"></span></button>
+            <button aria-label="Yorum 3" class="w-3 h-3 rounded-full bg-primary/20 hover:bg-primary/40 transition-all min-h-[44px] flex items-center cursor-pointer"><span class="w-3 h-3 rounded-full bg-primary/20"></span></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================= -->
+      <!-- 6) APPOINTMENT & CONTACT FORM (RANDEVU FORMU)                     -->
+      <!-- ================================================================= -->
+      <section class="w-full bg-surface-container-low py-[64px] sm:py-space-4xl px-5 sm:px-6 lg:px-space-md" id="randevu">
+        <div class="w-full max-w-[1280px] mx-auto">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-gutter-desktop items-stretch">
+            <!-- Left Column: Form inside Card -->
+            <div class="lg:col-span-7 bg-surface-card rounded-lg p-6 lg:p-[48px] shadow-[0_4px_16px_rgba(62,31,40,0.06)] flex flex-col justify-between">
+              <div class="mb-6 sm:mb-space-md">
+                <div class="inline-flex items-center h-[36px] px-5 rounded-full bg-surface text-primary font-label-sm text-label-sm uppercase tracking-widest mb-4">
+                  İletişim
+                </div>
+                <h2 class="font-headline-xl text-[28px] sm:text-[38px] lg:text-headline-xl text-primary font-bold tracking-tight mb-2">
+                  Randevu Alın
+                </h2>
+                <p class="font-body-md text-[15px] sm:text-body-md text-on-surface-variant max-w-lg leading-relaxed">
+                  Kişisel bakım danışmanınızla görüşmek için formu doldurun, sizi 15 dakika içinde arayalım.
+                </p>
+              </div>
+              <!-- The Pill Input Form -->
+              <form class="space-y-4" onsubmit="event.preventDefault(); alert('Randevu talebiniz başarıyla alındı.');">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <!-- Name Input -->
+                  <div>
+                    <label class="sr-only" for="full-name">Ad Soyad</label>
+                    <input class="w-full h-[52px] sm:h-[56px] px-6 rounded-full bg-surface text-primary placeholder:text-on-surface-variant/70 font-body-md text-body-md focus:outline-none focus:ring-2 focus:ring-secondary transition-all shadow-sm" id="full-name" placeholder="Ad Soyad" required="" type="text"/>
+                  </div>
+                  <!-- Email Input -->
+                  <div>
+                    <label class="sr-only" for="email-address">E-posta</label>
+                    <input class="w-full h-[52px] sm:h-[56px] px-6 rounded-full bg-surface text-primary placeholder:text-on-surface-variant/70 font-body-md text-body-md focus:outline-none focus:ring-2 focus:ring-secondary transition-all shadow-sm" id="email-address" placeholder="E-posta" required="" type="email"/>
+                  </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <!-- Phone Input -->
+                  <div>
+                    <label class="sr-only" for="phone-number">Telefon (+90 ...)</label>
+                    <input class="w-full h-[52px] sm:h-[56px] px-6 rounded-full bg-surface text-primary placeholder:text-on-surface-variant/70 font-body-md text-body-md focus:outline-none focus:ring-2 focus:ring-secondary transition-all shadow-sm" id="phone-number" placeholder="Telefon (+90 ...)" required="" type="tel" inputmode="tel"/>
+                  </div>
+                  <!-- Treatment Select -->
+                  <div>
+                    <label class="sr-only" for="treatment-select">İlgilendiğiniz Tedavi</label>
+                    <div class="relative w-full">
+                      <select class="w-full h-[52px] sm:h-[56px] px-6 pr-12 rounded-full bg-surface text-primary font-body-md text-body-md focus:outline-none focus:ring-2 focus:ring-secondary transition-all shadow-sm appearance-none cursor-pointer" id="treatment-select">
+                        <option disabled="" selected="" value="">İlgilendiğiniz Tedavi</option>
+                        <option value="cilt-genclestirme">Cilt Gençleştirme</option>
+                        <option value="medikal-bakim">Medikal Cilt Bakımı</option>
+                        <option value="lazer-epilasyon">Lazer Epilasyon</option>
+                        <option value="bolgesel-incelme">Bölgesel İncelme</option>
+                        <option value="sac-mezoterapi">Saç Bakımı &amp; Mezoterapi</option>
+                        <option value="dolgu-botoks">Dolgu &amp; Botoks</option>
+                      </select>
+                      <span class="material-symbols-outlined absolute right-5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-[20px]">
+                        expand_more
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <!-- Message Textarea -->
+                <div>
+                  <label class="sr-only" for="user-message">Mesajınız</label>
+                  <textarea class="w-full p-5 sm:p-6 rounded-[24px] bg-surface text-primary placeholder:text-on-surface-variant/70 font-body-md text-body-md focus:outline-none focus:ring-2 focus:ring-secondary transition-all shadow-sm resize-none" id="user-message" placeholder="Özel istekleriniz ya da belirtmek istediğiniz detaylar..." rows="3"></textarea>
+                </div>
+                <!-- Full-width Primary Pill Button -->
+                <button class="w-full h-[52px] px-8 rounded-full bg-primary text-text-on-dark font-label-md text-label-md shadow-[0_4px_16px_rgba(62,31,40,0.16)] hover:-translate-y-0.5 hover:shadow-[0_12px_32px_rgba(62,31,40,0.24)] transition-all duration-300 flex items-center justify-center gap-3 group mt-2 min-h-[44px] cursor-pointer" type="submit">
+                  <span>Randevu Talebi Gönder</span>
+                  <div class="w-7 h-7 rounded-full bg-surface/15 flex items-center justify-center text-text-on-dark group-hover:translate-x-1 transition-transform">
+                    <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+                  </div>
+                </button>
+              </form>
+            </div>
+            <!-- Right Column: Full-Height Sanctuary Interior Image -->
+            <div class="lg:col-span-5 h-[360px] sm:h-[480px] lg:h-auto min-h-full rounded-lg overflow-hidden relative shadow-[0_4px_16px_rgba(62,31,40,0.06)]">
+              <img class="w-full h-full object-cover" data-alt="Architecture interior of Serena medical spa lounge, modern quiet minimalism with warm fluted wood panels, cream linen armchairs, indoor olive tree, soft sunlight filtering through sheer curtains, ultra peaceful luxury aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVrIDy6malYiQwDA2VfvjCl8mfQOvSq9hsMiP9DnQkZIRD9OpgXS-MaXBdTWZ9Kly477j_GeCrrjqbc6TaFYmu8nmqne5wT5rf9A9TscTUX8nKXv-0setQAfU1V4MvU2wMuWG36trJXKRtwJJW6aDbM7nm10Lcp3uKuUspOvyAc2ONPboFPbTokjaRaM1pBZTwUuKUa6A8meVaM_-n4U8p8Ik2U_Lm4ZxacVlyX6xx0phbwh4yh0FK"/>
+              <div class="absolute inset-0 bg-gradient-to-t from-primary/70 via-transparent to-transparent flex flex-col justify-end p-6 sm:p-8 text-text-on-dark">
+                <span class="font-label-sm text-label-sm uppercase tracking-widest text-secondary-container mb-1">Nişantaşı Kliniğimiz</span>
+                <p class="font-headline-sm text-[18px] sm:text-headline-sm font-semibold">Tıbbi hassasiyet ve dingin konfor bir arada.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- ================================================================= -->
+  <!-- FOOTER                                                            -->
+  <!-- ================================================================= -->
+  <footer class="w-full bg-primary-container text-text-on-dark mt-space-4xl">
+    <div class="max-w-[1280px] mx-auto px-6 lg:px-space-md pt-12 sm:pt-space-3xl pb-8 sm:pb-space-xl">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-gutter-desktop">
+        <div class="lg:col-span-5 space-y-4">
+          <div class="font-headline-md text-headline-md tracking-tight text-text-on-dark font-semibold">Serena</div>
+          <p class="font-body-md text-body-md text-on-primary-container max-w-sm leading-relaxed">
+            Tıbbi uzmanlık ve dingin lüksün buluştuğu noktada, bütünsel ve restoratif estetik deneyimi.
+          </p>
+        </div>
+        <div class="lg:col-span-3 space-y-4">
+          <h4 class="font-label-md text-label-md text-text-on-dark uppercase tracking-widest font-semibold">Menü</h4>
+          <ul class="space-y-3 font-body-md text-body-md text-on-primary-container">
+            <li data-path="anasayfa"><a class="hover:text-text-on-dark transition-colors" data-path="anasayfa" href="#">Anasayfa</a></li>
+            <li data-path="hakkimizda"><a class="hover:text-text-on-dark transition-colors" data-path="hakkimizda" href="#manifesto">Hakkımızda</a></li>
+            <li data-path="tedaviler"><a class="hover:text-text-on-dark transition-colors" data-path="tedaviler" href="#tedaviler">Tedaviler &amp; Protokoller</a></li>
+            <li data-path="sonuclar"><a class="hover:text-text-on-dark transition-colors" data-path="sonuclar" href="#surec">Klinik Sonuçlar</a></li>
+            <li data-path="yorumlar"><a class="hover:text-text-on-dark transition-colors" data-path="yorumlar" href="#yorumlar">Danışan Yorumları</a></li>
+            <li data-path="iletisim"><a class="hover:text-text-on-dark transition-colors" data-path="iletisim" href="#randevu">İletişim</a></li>
+          </ul>
+        </div>
+        <div class="lg:col-span-4 space-y-4">
+          <h4 class="font-label-md text-label-md text-text-on-dark uppercase tracking-widest font-semibold">İletişim &amp; Lokasyon</h4>
+          <div class="space-y-3 font-body-md text-body-md text-on-primary-container">
+            <p class="flex items-start gap-2.5">
+              <span class="material-symbols-outlined text-[20px] text-secondary-container mt-0.5">location_on</span>
+              <span>Abdi İpekçi Cad. No: 42/6, Nişantaşı, İstanbul</span>
+            </p>
+            <p class="flex items-center gap-2.5">
+              <span class="material-symbols-outlined text-[20px] text-secondary-container">call</span>
+              <a class="hover:text-text-on-dark transition-colors" href="tel:+902123456789">+90 (212) 345 67 89</a>
+            </p>
+            <p class="flex items-center gap-2.5">
+              <span class="material-symbols-outlined text-[20px] text-secondary-container">chat</span>
+              <a class="hover:text-text-on-dark transition-colors" href="https://wa.me/902123456789" target="_blank" rel="noopener">WhatsApp Danışma Hattı</a>
+            </p>
+            <p class="flex items-center gap-2.5">
+              <span class="material-symbols-outlined text-[20px] text-secondary-container">photo_camera</span>
+              <a class="hover:text-text-on-dark transition-colors" href="#" target="_blank" rel="noopener">Instagram: @serenamedspa</a>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="mt-8 sm:mt-space-2xl pt-6 sm:pt-space-md border-t border-primary/30 flex flex-col md:flex-row justify-between items-center gap-4 text-on-primary-container font-label-sm text-label-sm">
+        <div>© 2024 Serena Medical Aesthetics &amp; Spa. Tüm hakları saklıdır.</div>
+        <div class="flex items-center gap-6">
+          <a class="hover:text-text-on-dark transition-colors" href="#">Gizlilik Politikası</a>
+          <a class="hover:text-text-on-dark transition-colors" href="#">KVKK Aydınlatma Metni</a>
+          <a class="hover:text-text-on-dark transition-colors" href="#">Kullanım Şartları</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Sabit WhatsApp Butonu (Sağ Alt) -->
+  <a href="https://wa.me/902123456789" target="_blank" rel="noopener" aria-label="WhatsApp İletişim Hattı" class="fixed bottom-5 right-5 z-40 w-14 h-14 rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-[0_4px_20px_rgba(0,0,0,0.25)] hover:scale-110 active:scale-95 transition-all">
+    <span class="material-symbols-outlined text-[28px]">chat</span>
+  </a>
+
+  <!-- ================================================================= -->
+  <!-- SCRIPTS                                                           -->
+  <!-- ================================================================= -->
+  <script>
+    // Mobil Navigasyon Menüsü Açma/Kapama
+    function toggleMobileNav() {
+      const drawer = document.getElementById('mobile-nav-drawer');
+      if (!drawer) return;
+      const isOpen = !drawer.classList.contains('-translate-x-full');
+      if (isOpen) {
+        drawer.classList.add('-translate-x-full', 'pointer-events-none');
+        drawer.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      } else {
+        drawer.classList.remove('-translate-x-full', 'pointer-events-none');
+        drawer.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    // DRIFT WALL 3D INTERACTIVE GALLERY ENGINE (KORUNAN ÖZEL BÖLÜM)
+    (function initDriftWall() {
+      const container = document.getElementById('drift-wall');
+      const plane = document.getElementById('drift-wall-plane');
+      if (!container || !plane) return;
+
+      const items = [
+        { image: 'images/drift-1.jpg', title: 'HydraFacial Cilt Terapisi' },
+        { image: 'images/hero-2.jpg', title: 'Nişantaşı Kliniğimiz & Mimari Zarafet' },
+        { image: 'images/drift-2.jpg', title: 'AuraDerm Botanik Serumlar' },
+        { image: 'images/hero-3.jpg', title: 'Kolajen Stimülasyonu & Bakım' },
+        { image: 'images/drift-3.jpg', title: 'Soğutma Başlıklı Hibrit Lazer' },
+        { image: 'images/drift-4.jpg', title: 'Traverten Hidroterapi Havuzu' },
+        { image: 'images/hero-1.jpg', title: 'Kişiselleştirilmiş Medikal Estetik' },
+        { image: 'images/drift-5.jpg', title: '3D Dijital Cilt Analizi & Danışmanlık' },
+        { image: 'images/drift-6.jpg', title: 'Karşılama Ritüeli & Bitki İnfüzyonu' },
+        { image: 'images/hero-4.jpg', title: 'Özel VIP Dinlenme Salonu' },
+        { image: 'images/drift-2.jpg', title: 'Peptid & Hyaluronik Kompleks' },
+        { image: 'images/drift-1.jpg', title: 'Derinlemesine Gözenek Detoksu' },
+        { image: 'images/drift-3.jpg', title: 'Ağrısız Hassas Uygulama' },
+        { image: 'images/hero-2.jpg', title: 'Traverten Kemerli Tedavi Süiti' },
+        { image: 'images/drift-4.jpg', title: 'Bütünsel Restoratif Deneyim' }
+      ];
+
+      const columns = 5;
+      const isMobile = window.innerWidth < 768;
+      const tileWidth = isMobile ? 150 : 220;
+      const tileHeight = isMobile ? 100 : 145;
+      const gap = isMobile ? 12 : 18;
+      const tilt = 16;
+      const turn = -14;
+      const roll = 0;
+      const depth = 120;
+      const speed = 42;
+      const direction = 'up';
+      const variance = 0.45;
+      const parallax = 0.6;
+      const pauseOnHover = false;
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Sütunlara dağıtım
+      const columnItems = Array.from({ length: columns }, () => []);
+      items.forEach((item, i) => columnItems[i % columns].push(item));
+
+      const containerHeight = container.clientHeight || 560;
+      const unit = tileHeight + gap;
+
+      const columnMeta = columnItems.map(col => {
+        const copyHeight = Math.max(unit, col.length * unit);
+        const copies = Math.max(2, Math.ceil((containerHeight * 1.8) / copyHeight) + 1);
+        return { copyHeight, copies };
+      });
+
+      const columnFactor = (index, v) => {
+        const pseudo = ((index * 0.6180339887 + 0.35) % 1) * 2 - 1;
+        return 1 + v * pseudo;
+      };
+
+      const dirSign = direction === 'up' ? 1 : -1;
+      const baseVelocities = columnItems.map((_, c) => {
+        const altSign = c % 2 === 0 ? 1 : -1;
+        return speed * columnFactor(c, variance) * dirSign * altSign;
+      });
+
+      const offsets = columnMeta.map((meta, c) => meta.copyHeight * ((c * 0.37) % 1));
+      const velocities = columnItems.map(() => 0);
+      const trackEls = [];
+
+      plane.innerHTML = '';
+      columnItems.forEach((col, c) => {
+        const colEl = document.createElement('div');
+        colEl.className = 'drift-wall__col';
+
+        const trackEl = document.createElement('div');
+        trackEl.className = 'drift-wall__track';
+        trackEls.push(trackEl);
+
+        const meta = columnMeta[c];
+        for (let copy = 0; copy < meta.copies; copy++) {
+          col.forEach((item, itemIdx) => {
+            const tile = document.createElement('div');
+            tile.className = 'drift-wall__tile';
+            tile.tabIndex = 0;
+            tile.setAttribute('role', 'button');
+            tile.setAttribute('aria-label', item.title);
+            tile.dataset.tileId = `${c}-${copy}-${itemIdx}`;
+            tile.dataset.col = c;
+
+            tile.innerHTML = `
+              <span class="drift-wall__inner">
+                <img src="${item.image}" alt="${item.title}" loading="lazy" decoding="async" draggable="false" />
+                <span class="drift-wall__overlay" aria-hidden="true"></span>
+                <span class="drift-wall__caption">${item.title}</span>
+              </span>
+            `;
+            trackEl.appendChild(tile);
+          });
+        }
+        colEl.appendChild(trackEl);
+        plane.appendChild(colEl);
+      });
+
+      let pointer = { x: 0, y: 0 };
+      let pointerDamped = { x: 0, y: 0 };
+      let hoveredCol = -1;
+      let wallHovered = false;
+      let activeTile = null;
+
+      function applyPlaneTransform(px, py) {
+        plane.style.transform = `translate(-50%, -50%) scale(1.18) ` +
+          `rotateX(${tilt + py}deg) rotateY(${turn + px}deg) rotateZ(${roll}deg) ` +
+          `translateZ(${-depth}px)`;
+      }
+
+      container.addEventListener('pointerenter', () => { wallHovered = true; });
+      container.addEventListener('pointermove', (e) => {
+        const rect = container.getBoundingClientRect();
+        if (!reduced && parallax > 0) {
+          pointer.x = (e.clientX - rect.left) / rect.width - 0.5;
+          pointer.y = (e.clientY - rect.top) / rect.height - 0.5;
+        }
+        const hit = document.elementFromPoint(e.clientX, e.clientY);
+        const tile = hit && hit.closest ? hit.closest('[data-tile-id]') : null;
+        if (tile) {
+          if (activeTile !== tile) {
+            if (activeTile) activeTile.classList.remove('is-active');
+            activeTile = tile;
+            activeTile.classList.add('is-active');
+            hoveredCol = Number(tile.dataset.col);
+          }
+        } else {
+          if (activeTile) {
+            activeTile.classList.remove('is-active');
+            activeTile = null;
+          }
+          hoveredCol = -1;
+        }
+      });
+
+      container.addEventListener('pointerleave', () => {
+        wallHovered = false;
+        pointer.x = 0;
+        pointer.y = 0;
+        if (activeTile) {
+          activeTile.classList.remove('is-active');
+          activeTile = null;
+        }
+        hoveredCol = -1;
+      });
+
+      let lastTs = null;
+      function animate(ts) {
+        if (lastTs === null) lastTs = ts;
+        const dt = Math.min(0.05, Math.max(0, ts - lastTs) / 1000);
+        lastTs = ts;
+
+        const maxTilt = parallax * 8;
+        const targetX = pointer.x * maxTilt;
+        const targetY = -pointer.y * maxTilt;
+        const damp = 1 - Math.exp(-dt / 0.12);
+        pointerDamped.x += (targetX - pointerDamped.x) * damp;
+        pointerDamped.y += (targetY - pointerDamped.y) * damp;
+        applyPlaneTransform(pointerDamped.x, pointerDamped.y);
+
+        if (!reduced) {
+          for (let c = 0; c < columns; c++) {
+            const meta = columnMeta[c];
+            if (!meta) continue;
+            const paused = wallHovered && pauseOnHover;
+            const factor = paused || hoveredCol === c ? 0 : 1;
+            const target = baseVelocities[c] * factor;
+            const ease = 1 - Math.exp(-dt / (target === 0 ? 0.16 : 0.28));
+            velocities[c] += (target - velocities[c]) * ease;
+            let next = (offsets[c] ?? 0) + velocities[c] * dt;
+            next = ((next % meta.copyHeight) + meta.copyHeight) % meta.copyHeight;
+            offsets[c] = next;
+            const el = trackEls[c];
+            if (el) el.style.transform = `translate3d(0, ${-next}px, 0)`;
+          }
+        }
+
+        requestAnimationFrame(animate);
+      }
+      requestAnimationFrame(animate);
+    })();
+  </script>
+</body>
+</html>
